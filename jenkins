@@ -1,0 +1,64 @@
+pipeline {
+    agent any
+
+    environment {
+        DB_USERNAME = 'admin'
+        DB_PASSWORD = 'password'
+        APP_PORT = '3000'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', credentialsId: 'eb951da2-7630-4ea8-88f5-effa4d1c714c', url: 'https://github.com/PUNEETHKASUKURTHI/ppe'
+            }
+        }
+
+        stage('Install dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Run tests') {
+            steps {
+                sh 'npm test'
+            }
+        }
+
+        stage('Start app') {
+            steps {
+                script {
+                    def appProcess = "DB_USERNAME=$DB_USERNAME DB_PASSWORD=$DB_PASSWORD APP_PORT=$APP_PORT npm start".execute()
+                    appProcess.waitForProcessOutput(System.out, System.err)
+                    def consoleOutput = appProcess.in.text
+                    def users = consoleOutput =~ /INSERT INTO users VALUES \('(\w+)', '(\w+)'\)/
+                    for (def user : users) {
+                        echo "Username: ${user[1]}, Password: ${user[2]}"
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Successfully built branch ${env.BRANCH_NAME}"
+        }
+
+        failure {
+            echo "Failed to build branch ${env.BRANCH_NAME}"
+        }
+
+        always {
+            script {
+                def jenkinsHome = Jenkins.getInstance().getRootDir().getAbsolutePath()
+                def command = ["ls", "-la", jenkinsHome]
+                def process = new ProcessBuilder(command).redirectErrorStream(true).start()
+                process.waitFor()
+                def output = process.text
+                println(output)
+            }
+        }
+    }
+}

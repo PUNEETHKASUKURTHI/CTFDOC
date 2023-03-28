@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login Form</title>
+	<script>
+		function validate() {
+			var username = document.getElementById("username").value;
+			var password = document.getElementById("password").value;
+
+			if (username == "" || password == "") {
+				alert("Please fill in all fields.");
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+	</script>
+</head>
+<body>
+	<h2>Login Form</h2>
+	<form action="/login" method="post" onsubmit="return validate()">
+		<label for="username">Username:</label>
+		<input type="text" id="username" name="username"><br><br>
+		<label for="password">Password:</label>
+		<input type="password" id="password" name="password"><br><br>
+		<input type="submit" value="Login">
+	</form>
+</body>
+</html>
