@@ -14,16 +14,16 @@ pipeline {
             }
         }
 
-        //stage('Install dependencies') {
-        //    steps {
-        //        sh 'npm install'
-        //    }
-        //}
+        stage('Install dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
 
-        //stage('Run tests') {
-        //    steps {
-        //        sh 'npm test'
-        //    }
+        stage('Run tests') {
+            steps {
+                sh 'npm test'
+            }
         }
 
         stage('Start app') {
