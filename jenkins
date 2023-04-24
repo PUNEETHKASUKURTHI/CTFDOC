@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', credentialsId: '45352631-f169-4266-89be-046d2f056160', url: 'https://github.com/PUNEETHKASUKURTHI/CTFDOC'
+                git branch: 'main', credentialsId: '', url: 'https://github.com/PUNEETHKASUKURTHI/CTFDOC'
             }
         }
 
